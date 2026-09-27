@@ -5,6 +5,7 @@ public class Bomb : MonoBehaviour
     [Header("Bomb Settings")]
     public float explosionRadius = 8f;
     public float maxDamage = 300f;
+    public GameObject explosionFX;
 
     void OnCollisionEnter2D(Collision2D collision)
     {
@@ -17,6 +18,7 @@ public class Bomb : MonoBehaviour
 
         foreach (Collider2D hit in hits)
         {
+            Instantiate(explosionFX, transform.position, Quaternion.identity);
             FallingOver piece = hit.GetComponent<FallingOver>();
             if (piece != null)
             {

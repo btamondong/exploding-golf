@@ -4,6 +4,7 @@ public class Explosion : MonoBehaviour
 {
     public float radius = 2f;
     public float maxDamage = 100f;
+    public GameObject explosionEffect;
 
     void Start()
     {
@@ -13,6 +14,7 @@ public class Explosion : MonoBehaviour
 
     void Explode()
     {
+        Instantiate(explosionEffect, transform.position, Quaternion.identity);
         // Find all colliders in radius
         Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, radius);
 
