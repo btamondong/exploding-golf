@@ -28,8 +28,6 @@ public class Explosion : MonoBehaviour
                 piece.ApplyDamage(damage);
             }
         }
-
-        // TODO: add camera shake / flash here if you want
     }
 
     void OnDrawGizmosSelected()

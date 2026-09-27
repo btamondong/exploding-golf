@@ -10,14 +10,13 @@ public class FallingOver : MonoBehaviour
 
     [Header("Physics")]
     public Rigidbody2D rb;
+    public float fallGravityScale = 2f;
     private SpriteRenderer sr;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
-
-        rb.bodyType = RigidbodyType2D.Kinematic;
         currentHP = maxHP;
     }
 
@@ -49,9 +48,8 @@ public class FallingOver : MonoBehaviour
         // If still no support → disappear instantly
         if (pieceBelow == null || pieceBelow.isDead)
         {
-            Destroy(gameObject);
+            StartFalling();
         }
-
     }
 
     FallingOver RaycastSupport(Vector2 direction)
@@ -65,20 +63,23 @@ public class FallingOver : MonoBehaviour
     public void ApplyDamage(float damage)
     {
         currentHP -= damage;
-
-        if (sr != null)
-        {
-            sr.color = Color.white;
-        }
-
         if (currentHP <= 0f)
         {
-            isDead = true;  // ← IMPORTANT
-            Destroy(gameObject);
+            isDead = true;
+            Collider2D col = GetComponent<Collider2D>();
+            if (col != null) Destroy(col);
+            rb.gravityScale = fallGravityScale;
+
+            // Destroy after physics reacts
+            Destroy(gameObject, 0.1f);
             return;
         }
-
-        Debug.Log("Damage applied to: " + gameObject.name + " HP now: " + currentHP);
-        Debug.Log("Damage: " + damage);
+    }
+    
+    void StartFalling()
+    {
+        if (rb.bodyType == RigidbodyType2D.Dynamic) return;
+        rb.bodyType = RigidbodyType2D.Dynamic;
+        rb.gravityScale = fallGravityScale;
     }
 }
