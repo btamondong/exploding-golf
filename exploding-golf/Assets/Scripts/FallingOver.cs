@@ -6,10 +6,10 @@ public class FallingOver : MonoBehaviour
     public float maxHP = 100f;
     public float currentHP = 100f;
     public bool isSupport = false;
+    public bool isDead = false;
 
     [Header("Physics")]
     public Rigidbody2D rb;
-
     private SpriteRenderer sr;
 
     void Awake()
@@ -47,12 +47,11 @@ public class FallingOver : MonoBehaviour
             pieceBelow = RaycastSupport(new Vector2(0.5f, -1f));
 
         // If still no support → disappear instantly
-        if (pieceBelow == null || pieceBelow.currentHP <= 0f)
+        if (pieceBelow == null || pieceBelow.isDead)
         {
-            Destroy(GetComponent<Collider2D>());
-            Destroy(GetComponent<SpriteRenderer>());
             Destroy(gameObject);
         }
+
     }
 
     FallingOver RaycastSupport(Vector2 direction)
@@ -70,24 +69,16 @@ public class FallingOver : MonoBehaviour
         if (sr != null)
         {
             sr.color = Color.white;
-            CancelInvoke(nameof(ResetColor));
-            Invoke(nameof(ResetColor), 0.05f);
         }
 
         if (currentHP <= 0f)
         {
-            Destroy(GetComponent<Collider2D>());
-            Destroy(GetComponent<SpriteRenderer>());
+            isDead = true;  // ← IMPORTANT
             Destroy(gameObject);
+            return;
         }
+
         Debug.Log("Damage applied to: " + gameObject.name + " HP now: " + currentHP);
         Debug.Log("Damage: " + damage);
-
-    }
-
-    void ResetColor()
-    {
-        if (sr != null)
-            sr.color = Color.gray;
     }
 }

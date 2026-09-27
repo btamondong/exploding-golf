@@ -4,7 +4,7 @@ public class Bomb : MonoBehaviour
 {
     [Header("Bomb Settings")]
     public float explosionRadius = 8f;
-    public float maxDamage = 120f;
+    public float maxDamage = 300f;
 
     void OnCollisionEnter2D(Collision2D collision)
     {
@@ -23,13 +23,11 @@ public class Bomb : MonoBehaviour
             if (piece != null)
             {
                 float dist = Vector2.Distance(transform.position, piece.transform.position);
-
                 float t = 1f - (dist / explosionRadius);
                 float damage = Mathf.Clamp(t * maxDamage, 0f, maxDamage);
-
                 Debug.Log("Damage applied to: " + piece.name + " amount: " + damage);
-
                 piece.ApplyDamage(damage);
+                Debug.Log("Distance to " + piece.name + ": " + dist);
             }
         }
 
