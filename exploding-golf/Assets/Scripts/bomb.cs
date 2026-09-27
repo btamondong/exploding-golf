@@ -9,7 +9,13 @@ public class Bomb : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        Explode();
+        float impact = collision.relativeVelocity.magnitude;
+
+        // Only explode if the impact is strong enough
+        if (impact > 4f)
+        {
+            Explode();
+        }
     }
 
     void Explode()
