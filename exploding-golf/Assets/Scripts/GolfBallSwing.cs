@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GolfBallSwing : MonoBehaviour
 {
@@ -15,6 +16,8 @@ public class GolfBallSwing : MonoBehaviour
     public float explosionRadius = 3f; // reach of explosion
     public float maxDamage = 50f; // max damage of explosion to destructible objects
     public GameObject explosionFX;
+
+    public Image ChargeBar;
 
     private Rigidbody2D rb;
     private Collider2D col;
@@ -64,6 +67,7 @@ public class GolfBallSwing : MonoBehaviour
             // Loop continuously while in charging state, with power going between 0-1
            chargeTime += Time.deltaTime * chargeSpeed;
            currentPower = Mathf.PingPong(chargeTime, 1f);
+           ChargeBar.fillAmount = currentPower / 1f;
         }
     }
 
