@@ -11,7 +11,14 @@ public class GolfBallSwing : MonoBehaviour
     [Header("Respawn Settings")]
     [SerializeField] private float respawnTimer = 5f; // time it takes for ball to respawn
 
+    [Header("Detonation Settings")]
+    public float explosionRadius = 3f; // reach of explosion
+    public float maxDamage = 50f; // max damage of explosion to destructible objects
+    public GameObject explosionFX;
+
     private Rigidbody2D rb;
+    private Collider2D col;
+    private SpriteRenderer sprite;
     private float currentPower = 0f;
     private float chargeTime = 0f;
     private bool isCharging = false;
@@ -22,6 +29,8 @@ public class GolfBallSwing : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        col = GetComponent<Collider2D>();
+        sprite = GetComponent<SpriteRenderer>();
 
         // Set starting position in scene to a variable
         startPosition = transform.position;
@@ -80,6 +89,34 @@ public class GolfBallSwing : MonoBehaviour
         StartCoroutine(ResetBallPosition());
     }
 
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        Explode();
+    }
+
+    void Explode()
+    {
+        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, explosionRadius);
+
+        foreach (Collider2D hit in hits)
+        {
+            Instantiate(explosionFX, transform.position, Quaternion.identity);
+            FallingOver piece = hit.GetComponent<FallingOver>();
+            if (piece != null)
+            {
+                float dist = Vector2.Distance(transform.position, piece.transform.position);
+                float t = 1f - (dist / explosionRadius);
+                float damage = Mathf.Clamp(t * maxDamage, 0f, maxDamage);
+                piece.ApplyDamage(damage);
+            }
+        }
+        // Hide and disable ball after detonation until respawn
+        rb.linearVelocity = Vector2.zero;
+        rb.bodyType = RigidbodyType2D.Kinematic;
+        col.enabled = false;
+        sprite.enabled = false;
+    }
+
     private IEnumerator ResetBallPosition()
     {
         // Wait for a set amount of time before despawning
@@ -90,9 +127,20 @@ public class GolfBallSwing : MonoBehaviour
         rb.bodyType = RigidbodyType2D.Kinematic;
         rb.linearVelocity = Vector2.zero;
 
+        // Reactivate visuals if detonated
+        col.enabled = true;
+        sprite.enabled = true;
+
         // Reset current variables for next shot
         currentPower = 0f;
         chargeTime = 0f;
         inMotion = false;
+    }
+
+    void OnDrawGizmosSelected()
+    {
+        // Display explosion radius
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, explosionRadius);
     }
 }
