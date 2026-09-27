@@ -5,6 +5,7 @@ public class Explosion : MonoBehaviour
     public float radius = 2f;
     public float maxDamage = 100f;
     public GameObject explosionEffect;
+    public AudioClip explosionSound;
 
     void Start()
     {
@@ -14,8 +15,13 @@ public class Explosion : MonoBehaviour
 
     void Explode()
     {
+        // Visual effect
         Instantiate(explosionEffect, transform.position, Quaternion.identity);
-        // Find all colliders in radius
+
+        // Play sound
+        AudioSource.PlayClipAtPoint(explosionSound, transform.position);
+
+        // Damage logic
         Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, radius);
 
         foreach (Collider2D hit in hits)
@@ -23,7 +29,6 @@ public class Explosion : MonoBehaviour
             FallingOver piece = hit.GetComponent<FallingOver>();
             if (piece != null)
             {
-                // Damage based on distance (closer = more damage)
                 float dist = Vector2.Distance(transform.position, piece.transform.position);
                 float t = 1f - (dist / radius);
                 float damage = Mathf.Clamp(t * maxDamage, 0f, maxDamage);
