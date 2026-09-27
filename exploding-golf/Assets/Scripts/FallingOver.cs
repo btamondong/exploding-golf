@@ -13,6 +13,11 @@ public class FallingOver : MonoBehaviour
     public float fallGravityScale = 2f;
     private SpriteRenderer sr;
 
+    [Header("Audio")]
+    public AudioClip destroySound;
+    public float destroyVolume = 1f;
+    public float destroyPitch = 1f;
+    
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -69,11 +74,27 @@ public class FallingOver : MonoBehaviour
             Collider2D col = GetComponent<Collider2D>();
             if (col != null) Destroy(col);
             rb.gravityScale = fallGravityScale;
-
+            PlayDestroySound();
             // Destroy after physics reacts
             Destroy(gameObject, 0.1f);
             return;
         }
+    }
+    
+    void PlayDestroySound()
+    {
+        if (destroySound == null) return;
+
+        GameObject audioObj = new GameObject("PieceDestroySound");
+        AudioSource src = audioObj.AddComponent<AudioSource>();
+
+        src.clip = destroySound;
+        src.volume = destroyVolume;
+        src.pitch = destroyPitch;
+        src.spatialBlend = 1f;
+        src.Play();
+
+        Destroy(audioObj, destroySound.length);
     }
     
     void StartFalling()

@@ -6,6 +6,9 @@ public class Bomb : MonoBehaviour
     public float explosionRadius = 8f;
     public float maxDamage = 300f;
     public GameObject explosionFX;
+    public AudioClip explosionSound;
+    public float volume = 1f;
+    public float pitch = 1f;
 
     void OnCollisionEnter2D(Collision2D collision)
     {
@@ -20,11 +23,17 @@ public class Bomb : MonoBehaviour
 
     void Explode()
     {
+        // Spawn FX once
+        Instantiate(explosionFX, transform.position, Quaternion.identity);
+
+        // Play sound once
+        AudioSource.PlayClipAtPoint(explosionSound, transform.position);
+
+        // Damage pieces
         Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, explosionRadius);
 
         foreach (Collider2D hit in hits)
         {
-            Instantiate(explosionFX, transform.position, Quaternion.identity);
             FallingOver piece = hit.GetComponent<FallingOver>();
             if (piece != null)
             {
@@ -34,6 +43,7 @@ public class Bomb : MonoBehaviour
                 piece.ApplyDamage(damage);
             }
         }
+
         Destroy(gameObject);
     }
 

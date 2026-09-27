@@ -154,6 +154,9 @@ MonoBehaviour:
   isDead: 0
   rb: {fileID: 9153503077052289914}
   fallGravityScale: 2
+  destroySound: {fileID: 8300000, guid: 8ae4410ef7f66404ba15c0325c263d42, type: 3}
+  destroyVolume: 1
+  destroyPitch: 1
 --- !u!50 &9153503077052289914
 Rigidbody2D:
   serializedVersion: 5
