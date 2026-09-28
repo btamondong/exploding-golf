@@ -8,36 +8,41 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        // Show main menu at start
         mainMenuCanvas.SetActive(true);
         endScreenCanvas.SetActive(false);
 
-        Time.timeScale = 0f;   // freeze game at menu
+        // Freeze gameplay while menu is open
+        Time.timeScale = 0f;
     }
 
     public void StartGame()
     {
+        // Hide menu and unfreeze gameplay
         mainMenuCanvas.SetActive(false);
-        Time.timeScale = 1f;   // unfreeze game
+        Time.timeScale = 1f;
     }
     
     public void EndLevel()
     {
+        // Show end screen and freeze gameplay
         endScreenCanvas.SetActive(true);
-        Time.timeScale = 0f;   // freeze game at end screen
+        Time.timeScale = 0f;
     }
 
     public void RestartLevel()
     {
-        Time.timeScale = 1f;   // unfreeze before reload
+        // Unfreeze before reloading so the new scene starts normally
+        Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     public void BackToMenu()
     {
+        // Hide end screen, show menu, freeze gameplay
         endScreenCanvas.SetActive(false);
         mainMenuCanvas.SetActive(true);
-
-        Time.timeScale = 0f;   // freeze again at menu
+        Time.timeScale = 0f;
     }
 
     public void QuitGame()
