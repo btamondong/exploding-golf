@@ -28,6 +28,8 @@ public class GolfBallSwing : MonoBehaviour
     private bool inMotion = false;
     private Vector2 startPosition;
 
+    public GolferAnimator golfer;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -37,6 +39,7 @@ public class GolfBallSwing : MonoBehaviour
 
         // Set starting position in scene to a variable
         startPosition = transform.position;
+        golfer.SetIdle(); 
 
         // Freeze ball in place until it is launched
         rb.bodyType = RigidbodyType2D.Kinematic;
@@ -53,6 +56,7 @@ public class GolfBallSwing : MonoBehaviour
             {
                 // On first click, start charging
                 isCharging = true;
+                golfer.SetCharging(); 
             }
             else if (isCharging == true)
             {
@@ -79,6 +83,8 @@ public class GolfBallSwing : MonoBehaviour
 
         // Prevent player from launching ball again while in motion
         inMotion = true;
+        
+        golfer.SetSwung();
         
         // Reapply gravity to ball after launch
         rb.bodyType = RigidbodyType2D.Dynamic;
@@ -134,6 +140,7 @@ public class GolfBallSwing : MonoBehaviour
         // Reactivate visuals if detonated
         col.enabled = true;
         sprite.enabled = true;
+        golfer.SetIdle(); 
 
         // Reset current variables for next shot
         currentPower = 0f;
