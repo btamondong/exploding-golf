@@ -1104,9 +1104,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a583fdbbf47eb534baeb6b89a07ddc40, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  idleSprite: {fileID: 0}
-  chargingSprite: {fileID: 0}
-  swungSprite: {fileID: 0}
+  idleSprite: {fileID: 6929097272964019775, guid: dc507b3d8e5eae04b82ae58677c603dd, type: 3}
+  chargingSprite: {fileID: -8590978993730326584, guid: a21c1bd7e019c294c8008649bf0501e0, type: 3}
+  swungSprite: {fileID: 3279504615729213765, guid: a4e4a38656c046a4da87c87c2ca38420, type: 3}
 --- !u!212 &646193379
 SpriteRenderer:
   m_ObjectHideFlags: 0
