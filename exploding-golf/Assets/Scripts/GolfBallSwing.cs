@@ -26,6 +26,7 @@ public class GolfBallSwing : MonoBehaviour
     private float chargeTime = 0f;
     private bool isCharging = false;
     private bool inMotion = false;
+    private bool isExploded = false;
     private Vector2 startPosition;
 
     public GolferAnimator golfer;
@@ -50,7 +51,7 @@ public class GolfBallSwing : MonoBehaviour
     void Update()
     {
         // Handle player mouse click inputs
-        if (Input.GetMouseButtonDown(0) && !inMotion)
+        if (Input.GetMouseButtonDown(0))
         {
             if (isCharging == false)
             {
@@ -93,14 +94,17 @@ public class GolfBallSwing : MonoBehaviour
         float finalForce = currentPower * maxLaunchForce;
 
         // Apply force to the ball based on direction and final force
-        rb.AddForce(launchDirection.normalized * finalForce, ForceMode2D.Impulse);
+        Vector2 launchVelocity = launchDirection.normalized * finalForce;
+        rb.linearVelocity = launchVelocity;
 
-        // Start respawn function
-        StartCoroutine(ResetBallPosition());
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        if (!inMotion || isExploded)
+        {
+            return;
+        }
         Explode();
     }
 
@@ -125,6 +129,9 @@ public class GolfBallSwing : MonoBehaviour
         rb.bodyType = RigidbodyType2D.Kinematic;
         col.enabled = false;
         sprite.enabled = false;
+
+        // Start respawn function
+        StartCoroutine(ResetBallPosition());
     }
 
     private IEnumerator ResetBallPosition()
